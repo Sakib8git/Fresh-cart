@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useState } from "react"
-import { Menu, X, ShoppingCart } from "lucide-react"
+import Link from "next/link";
+import { useState } from "react";
+import { Menu, X, ShoppingCart } from "lucide-react";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="bg-white border-b border-green-100 sticky top-0 z-50">
@@ -21,16 +21,34 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-gray-600 hover:text-green-600 transition">
+            <Link
+              href="/"
+              className="text-gray-600 hover:text-green-600 transition"
+            >
               Home
             </Link>
-            <Link href="/items" className="text-gray-600 hover:text-green-600 transition">
+            <Link
+              href="/items"
+              className="text-gray-600 hover:text-green-600 transition"
+            >
               Shop
             </Link>
-            <Link href="/about" className="text-gray-600 hover:text-green-600 transition">
+            <Link
+              href="/dashboard"
+              className="text-gray-600 hover:text-green-600 transition"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/about"
+              className="text-gray-600 hover:text-green-600 transition"
+            >
               About
             </Link>
-            <Link href="/contact" className="text-gray-600 hover:text-green-600 transition">
+            <Link
+              href="/contact"
+              className="text-gray-600 hover:text-green-600 transition"
+            >
               Contact
             </Link>
           </div>
@@ -43,30 +61,56 @@ export default function Navbar() {
                 0
               </span>
             </button>
-            <Link href="/login" className="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 transition">
+            <Link
+              href="/login"
+              className="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
+            >
               Login
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden p-2 text-gray-600" onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              className="p-2 text-gray-600"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden pb-4 border-t border-green-100">
-            <Link href="/" className="block py-2 text-gray-600 hover:text-green-600">
+            <Link
+              href="/"
+              className="block py-2 text-gray-600 hover:text-green-600"
+            >
               Home
             </Link>
-            <Link href="/items" className="block py-2 text-gray-600 hover:text-green-600">
+            <Link
+              href="/items"
+              className="block py-2 text-gray-600 hover:text-green-600"
+            >
               Shop
             </Link>
-            <Link href="/about" className="block py-2 text-gray-600 hover:text-green-600">
+            <Link
+              href="/dashboard"
+              className="block py-2 text-gray-600 hover:text-green-600"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/about"
+              className="block py-2 text-gray-600 hover:text-green-600"
+            >
               About
             </Link>
-            <Link href="/contact" className="block py-2 text-gray-600 hover:text-green-600">
+            <Link
+              href="/contact"
+              className="block py-2 text-gray-600 hover:text-green-600"
+            >
               Contact
             </Link>
             <Link
@@ -79,5 +123,5 @@ export default function Navbar() {
         )}
       </div>
     </nav>
-  )
+  );
 }

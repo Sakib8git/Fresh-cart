@@ -2,13 +2,14 @@
 
 import { Mail } from "lucide-react";
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Newsletter signup successful! Check ${email} for confirmation.`);
+    toast(`Newsletter signup successful! Check ${email} for confirmation.`);
     setEmail("");
   };
 
@@ -46,6 +47,7 @@ export default function Newsletter() {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 }

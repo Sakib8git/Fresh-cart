@@ -4,112 +4,17 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { useState } from "react";
 import { Filter, X } from "lucide-react";
-
-const allProducts = [
-  {
-    id: 1,
-    name: "Organic Tomatoes",
-    price: 4.99,
-    category: "vegetables",
-    rating: 4.8,
-    image: "🍅",
-  },
-  {
-    id: 2,
-    name: "Fresh Spinach",
-    price: 3.49,
-    category: "vegetables",
-    rating: 4.9,
-    image: "🥬",
-  },
-  {
-    id: 3,
-    name: "Crispy Carrots",
-    price: 2.99,
-    category: "vegetables",
-    rating: 4.7,
-    image: "🥕",
-  },
-  {
-    id: 4,
-    name: "Bell Peppers",
-    price: 3.99,
-    category: "vegetables",
-    rating: 4.6,
-    image: "🫑",
-  },
-  {
-    id: 5,
-    name: "Ripe Bananas",
-    price: 1.99,
-    category: "fruits",
-    rating: 4.8,
-    image: "🍌",
-  },
-  {
-    id: 6,
-    name: "Fresh Apples",
-    price: 5.99,
-    category: "fruits",
-    rating: 4.9,
-    image: "🍎",
-  },
-  {
-    id: 7,
-    name: "Orange Oranges",
-    price: 4.49,
-    category: "fruits",
-    rating: 4.7,
-    image: "🍊",
-  },
-  {
-    id: 8,
-    name: "Strawberries",
-    price: 6.99,
-    category: "fruits",
-    rating: 4.9,
-    image: "🍓",
-  },
-  {
-    id: 9,
-    name: "Milk",
-    price: 3.99,
-    category: "dairy",
-    rating: 4.8,
-    image: "🥛",
-  },
-  {
-    id: 10,
-    name: "Cheese",
-    price: 7.99,
-    category: "dairy",
-    rating: 4.7,
-    image: "🧀",
-  },
-  {
-    id: 11,
-    name: "Yogurt",
-    price: 4.99,
-    category: "dairy",
-    rating: 4.8,
-    image: "🥣",
-  },
-  {
-    id: 12,
-    name: "Brown Rice",
-    price: 6.99,
-    category: "grains",
-    rating: 4.7,
-    image: "🌾",
-  },
-];
-
+import Link from "next/link";
+import { allProducts } from "@/lib/products";
+import Image from "next/image";
+// console.log(allProducts);
 const categories = [
   { id: "all", name: "All Products" },
   { id: "vegetables", name: "Vegetables" },
   { id: "fruits", name: "Fruits" },
   { id: "dairy", name: "Dairy" },
   { id: "grains", name: "Grains" },
+  { id: "fish", name: "Fish" },
 ];
 
 export default function ItemsPage() {
@@ -146,7 +51,7 @@ export default function ItemsPage() {
         <div className="flex gap-4 mb-8">
           {/* Mobile Filter Button */}
           <button
-            className="md:hidden flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg"
+            className="md:hidden flex items-center gap-2 px-4 py-2 bg-base-100 border border-gray-200 rounded-lg"
             onClick={() => setShowFilters(!showFilters)}
           >
             <Filter size={20} />
@@ -157,7 +62,7 @@ export default function ItemsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-green-600"
+            className="px-4 py-2 bg-sky-100   text-black rounded-lg focus:outline-none focus:border-green-600"
           >
             <option value="popular">Most Popular</option>
             <option value="price-low">Price: Low to High</option>
@@ -208,13 +113,21 @@ export default function ItemsPage() {
           <div className="flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {sortedProducts.map((product) => (
-                <div
+                <Link
                   key={product.id}
-                  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
+                  href={`/items/${product.id}`}
+                  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer"
                 >
                   <div className="bg-gradient-to-b from-green-100 to-emerald-100 p-6 flex items-center justify-center h-40">
-                    <span className="text-5xl">{product.image}</span>
+                    <Image
+                      src={product.image} // ✅ এখানে URL আসবে
+                      alt={product.name}
+                      width={160}
+                      height={160}
+                      className="object-contain w-90 rounded-lg transition-transform duration-500 ease-in-out hover:scale-105"
+                    />
                   </div>
+
                   <div className="p-4">
                     <h3 className="font-semibold text-gray-900 mb-2 text-sm">
                       {product.name}
@@ -231,7 +144,7 @@ export default function ItemsPage() {
                       Add to Cart
                     </button>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

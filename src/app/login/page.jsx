@@ -5,6 +5,7 @@ import Footer from "@/components/footer";
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,7 +17,7 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     setTimeout(() => {
-      alert(`Login successful! Welcome back, ${email}`);
+      toast.success(`Login successful! Welcome back, ${email}`);
       setIsLoading(false);
       setEmail("");
       setPassword("");
@@ -160,7 +161,7 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-
+      <ToastContainer />
       <Footer />
     </main>
   );

@@ -5,6 +5,7 @@ import Footer from "@/components/footer";
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,16 +30,16 @@ export default function SignupPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast("Passwords do not match!");
       return;
     }
     if (!formData.agreeToTerms) {
-      alert("Please agree to the terms and conditions");
+      toast("Please agree to the terms and conditions");
       return;
     }
     setIsLoading(true);
     setTimeout(() => {
-      alert(
+      toast(
         `Account created successfully! Welcome to FreshCart, ${formData.fullName}`
       );
       setIsLoading(false);
@@ -241,7 +242,7 @@ export default function SignupPage() {
           </div>
         </div>
       </div>
-
+      <ToastContainer />
       <Footer />
     </main>
   );

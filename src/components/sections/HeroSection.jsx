@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 export default function HeroSection() {
   return (
@@ -25,7 +26,7 @@ export default function HeroSection() {
                 <ChevronRight size={20} />
               </Link>
               <Link
-                href="/"
+                href="/about"
                 className="inline-flex items-center gap-2 px-6 py-3 border-2 border-green-600 text-green-600 rounded-lg font-semibold hover:bg-green-50 transition"
               >
                 Learn More
@@ -34,7 +35,15 @@ export default function HeroSection() {
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-8 flex items-center justify-center h-80">
             <div className="w-full h-full bg-gradient-to-br from-green-200 to-emerald-300 rounded-lg flex items-center justify-center">
-              <span className="text-6xl">🥬</span>
+              <span className="text-6xl">
+                <Image
+                  className="h-70 lg:w-145 rounded-3xl hover:scale-105 hover:rotate-2 transition-transform duration-500 ease-in-out"
+                  width={500}
+                  height={500}
+                  src="https://i.ibb.co.com/dwDyY0Sp/andrew-benjack-4ug-H7-Ti-Gj-A-unsplash.jpg"
+                  alt="Fresh groceries"
+                />
+              </span>
             </div>
           </div>
         </div>
