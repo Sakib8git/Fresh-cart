@@ -28,7 +28,7 @@ export default function FeaturedProducts() {
                     alt={product.name}
                     width={160}
                     height={160}
-                    className="object-contain w-90 rounded-lg transition-transform duration-500 ease-in-out hover:scale-105"
+                    className="object-contain w-50 lg:w-90 rounded-lg transition-transform duration-500 ease-in-out hover:scale-105"
                   />
                 </div>
                 <div className="p-4">

@@ -6,23 +6,40 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { signInWithEmail, signInWithGoogle } from "@/lib/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  async function handleLogin(e) {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      await signInWithEmail(email, password);
       toast.success(`Login successful! Welcome back, ${email}`);
+      router.push("/");
       setIsLoading(false);
-      setEmail("");
-      setPassword("");
-    }, 1500);
-  };
+    } catch (err) {
+      console.log(err);
+      toast.error("Login Fail");
+      setIsLoading(false);
+    }
+  }
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     toast.success(`Login successful! Welcome back, ${email}`);
+  //     setIsLoading(false);
+  //     setEmail("");
+  //     setPassword("");
+  //   }, 1500);
+  // };
 
   return (
     <main className="min-h-screen flex flex-col bg-gray-50">
@@ -41,7 +58,7 @@ export default function LoginPage() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-6">
               {/* Email Input */}
               <div>
                 <label
@@ -126,13 +143,24 @@ export default function LoginPage() {
             </div>
 
             {/* Social Login */}
-            <div className="grid grid-cols-2 gap-4">
-              <button className="py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700">
+            <div className="">
+              <button
+                onClick={async () => {
+                  try {
+                    await signInWithGoogle();
+                    toast.success("Logged in with Google!");
+                    router.push("/");
+                  } catch (err) {
+                    toast.error("Google login failed");
+                  }
+                }}
+                className="py-2 px-4 w-full border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700"
+              >
                 Google
               </button>
-              <button className="py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700">
+              {/* <button className="py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700">
                 GitHub
-              </button>
+              </button> */}
             </div>
 
             {/* Sign Up Link */}
@@ -154,9 +182,9 @@ export default function LoginPage() {
                 Demo Credentials:
               </span>
               <br />
-              Email: demo@freshcart.com
+              Email: demo@user.com
               <br />
-              Password: demo123
+              Password: Anik1122
             </p>
           </div>
         </div>

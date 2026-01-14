@@ -120,11 +120,11 @@ export default function ItemsPage() {
                 >
                   <div className="bg-gradient-to-b from-green-100 to-emerald-100 p-6 flex items-center justify-center h-40">
                     <Image
-                      src={product.image} // ✅ এখানে URL আসবে
+                      src={product.image}
                       alt={product.name}
                       width={160}
                       height={160}
-                      className="object-contain w-90 rounded-lg transition-transform duration-500 ease-in-out hover:scale-105"
+                      className="object-contain w-50 lg:w-90 rounded-lg transition-transform duration-500 ease-in-out hover:scale-105"
                     />
                   </div>
 

@@ -1,10 +1,17 @@
 "use client";
-
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
+import useAuthState from "@/hooks/useAuthState";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { logout } from "@/lib/auth";
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const { user } = useAuthState();
+  console.log(user);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -34,12 +41,6 @@ export default function Navbar() {
               Shop
             </Link>
             <Link
-              href="/dashboard"
-              className="text-gray-600 hover:text-green-600 transition"
-            >
-              Dashboard
-            </Link>
-            <Link
               href="/about"
               className="text-gray-600 hover:text-green-600 transition"
             >
@@ -51,6 +52,22 @@ export default function Navbar() {
             >
               Contact
             </Link>
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="text-gray-600 hover:text-green-600 transition"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              ""
+            )}
+            {/* <Link
+              href="/dashboard"
+              className="text-gray-600 hover:text-green-600 transition"
+            >
+              Dashboard
+            </Link> */}
           </div>
 
           {/* Right Section */}
@@ -61,12 +78,45 @@ export default function Navbar() {
                 0
               </span>
             </button>
-            <Link
-              href="/login"
-              className="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
-            >
-              Login
-            </Link>
+            <div className="relative">
+              {user ? (
+                <>
+                  <button
+                    onClick={() => setOpen(!open)}
+                    className="focus:outline-none"
+                  >
+                    <Image
+                      src="/man.png"
+                      alt="User avatar"
+                      width={40}
+                      height={40}
+                      className="rounded-full border border-gray-300 cursor-pointer"
+                    />
+                  </button>
+
+                  {open && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+                      <div className="px-4 py-2 text-gray-700 font-semibold border-b">
+                        {user.displayName || user.email}
+                      </div>
+                      <button
+                        onClick={logout}
+                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-50"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -95,12 +145,12 @@ export default function Navbar() {
             >
               Shop
             </Link>
-            <Link
+            {/* <Link
               href="/dashboard"
               className="block py-2 text-gray-600 hover:text-green-600"
             >
               Dashboard
-            </Link>
+            </Link> */}
             <Link
               href="/about"
               className="block py-2 text-gray-600 hover:text-green-600"
@@ -113,12 +163,40 @@ export default function Navbar() {
             >
               Contact
             </Link>
-            <Link
-              href="/login"
-              className="block mt-4 px-4 py-2 text-white bg-green-600 rounded-lg text-center hover:bg-green-700 transition"
-            >
-              Login
-            </Link>
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="text-gray-600 hover:text-green-600 transition"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              ""
+            )}
+            <div className="mt-2 ">
+              {user ? (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src="/man.png" // ✅ public folder image
+                      alt="User avatar"
+                      width={40}
+                      height={40}
+                      className="rounded-full border border-gray-300"
+                    />
+                    <p>{user.displayName || user.email}</p>
+                  </div>
+                  <button onClick={() => signOut(auth)}>Logout</button>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
         )}
       </div>

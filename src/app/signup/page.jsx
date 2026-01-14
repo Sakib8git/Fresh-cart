@@ -6,8 +6,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
+import { useRouter } from "next/navigation";
+// import { signOut } from "firebase/auth";
+import { signInWithGoogle, signUpWithEmail } from "@/lib/auth";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function SignupPage() {
+  const router = useRouter();
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,31 +36,61 @@ export default function SignupPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  async function handleSignup(e) {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      toast("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
     if (!formData.agreeToTerms) {
-      toast("Please agree to the terms and conditions");
+      toast.error("Please agree to the terms and conditions");
       return;
     }
     setIsLoading(true);
-    setTimeout(() => {
-      toast(
-        `Account created successfully! Welcome to FreshCart, ${formData.fullName}`
+    try {
+      await signUpWithEmail(
+        formData.email,
+        formData.password,
+        formData.fullName
       );
+      toast.success(
+        `Account created successfully! Welcome, ${formData.fullName}`
+      );
+      await signOut(auth); // logout immediately
+      router.push("/login"); // send to login page
+    } catch (err) {
+      console.error(err);
+      toast.error("Signup failed");
+    } finally {
       setIsLoading(false);
-      setFormData({
-        fullName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        agreeToTerms: false,
-      });
-    }, 1500);
-  };
+    }
+  }
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (formData.password !== formData.confirmPassword) {
+  //     toast("Passwords do not match!");
+  //     return;
+  //   }
+  //   if (!formData.agreeToTerms) {
+  //     toast("Please agree to the terms and conditions");
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     toast(
+  //       `Account created successfully! Welcome to FreshCart, ${formData.fullName}`
+  //     );
+  //     setIsLoading(false);
+  //     setFormData({
+  //       fullName: "",
+  //       email: "",
+  //       password: "",
+  //       confirmPassword: "",
+  //       agreeToTerms: false,
+  //     });
+  //   }, 1500);
+  // };
 
   return (
     <main className="min-h-screen flex flex-col bg-gray-50">
@@ -72,7 +111,7 @@ export default function SignupPage() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSignup} className="space-y-4">
               {/* Full Name Input */}
               <div>
                 <label
@@ -220,13 +259,24 @@ export default function SignupPage() {
             </div>
 
             {/* Social Signup */}
-            <div className="grid grid-cols-2 gap-4">
-              <button className="py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700">
+            <div className="">
+              <button
+                onClick={async () => {
+                  try {
+                    await signInWithGoogle();
+                    toast.success("Logged in with Google!");
+                    router.push("/");
+                  } catch (err) {
+                    toast.error("Google login failed");
+                  }
+                }}
+                className="py-2 px-4 w-full border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700"
+              >
                 Google
               </button>
-              <button className="py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700">
-                GitHub
-              </button>
+              {/* <button className="py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium text-gray-700">
+                            GitHub
+                          </button> */}
             </div>
 
             {/* Login Link */}
