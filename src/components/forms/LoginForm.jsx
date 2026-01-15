@@ -20,7 +20,7 @@ export default function LoginForm() {
     try {
       await signInWithEmail(email, password);
       toast.success(`Login successful! Welcome back, ${email}`);
-      router.push("/");
+      router.push("/items");
     } catch (err) {
       console.error(err);
       toast.error("Login failed");
@@ -33,7 +33,7 @@ export default function LoginForm() {
     try {
       await signInWithGoogle();
       toast.success("Logged in with Google!");
-      router.push("/");
+      router.push("/items");
     } catch (err) {
       toast.error("Google login failed");
     }

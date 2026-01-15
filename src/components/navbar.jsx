@@ -7,15 +7,30 @@ import useAuthState from "@/hooks/useAuthState";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { logout } from "@/lib/auth";
+import { useCart } from "./context/CartProvider";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user } = useAuthState();
-  console.log(user);
+  const { getTotalItems } = useCart();
   const [isOpen, setIsOpen] = useState(false);
+  const totalItems = getTotalItems();
+  const router = useRouter();
+
+  // console.log(user);
+
+  function handleClick(e) {
+    e.preventDefault();
+    if (user) {
+      router.push("/cart"); // ✅ logged in হলে cart এ যাবে
+    } else {
+      router.push("/login"); // ✅ না থাকলে login এ যাবে
+    }
+  }
 
   return (
-    <nav className="bg-white border-b border-green-100 sticky top-0 z-50">
+    <nav className="bg-white border-b border-green-100 top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -62,22 +77,33 @@ export default function Navbar() {
             ) : (
               ""
             )}
-            {/* <Link
-              href="/dashboard"
-              className="text-gray-600 hover:text-green-600 transition"
-            >
-              Dashboard
-            </Link> */}
           </div>
 
           {/* Right Section */}
           <div className="hidden md:flex items-center gap-4">
-            <button className="relative p-2 text-gray-600 hover:text-green-600">
+            {/* <Link
+              href="/cart"
+              className="relative p-2 text-gray-600 hover:text-green-600"
+            >
               <ShoppingCart size={24} />
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                0
-              </span>
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </Link> */}
+            <button
+              onClick={handleClick}
+              className="relative p-2 text-gray-600 hover:text-green-600"
+            >
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
             </button>
+
             <div className="relative">
               {user ? (
                 <>
@@ -121,6 +147,26 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
+            {/* <Link href="/cart" className="relative p-2 text-gray-600">
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </Link> */}
+            <button
+              onClick={handleClick}
+              className="relative p-2 text-gray-600 hover:text-green-600"
+            >
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
             <button
               className="p-2 text-gray-600"
               onClick={() => setIsOpen(!isOpen)}
@@ -145,12 +191,6 @@ export default function Navbar() {
             >
               Shop
             </Link>
-            {/* <Link
-              href="/dashboard"
-              className="block py-2 text-gray-600 hover:text-green-600"
-            >
-              Dashboard
-            </Link> */}
             <Link
               href="/about"
               className="block py-2 text-gray-600 hover:text-green-600"
@@ -173,12 +213,12 @@ export default function Navbar() {
             ) : (
               ""
             )}
-            <div className="mt-2 ">
+            <div className="mt-2">
               {user ? (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
                     <Image
-                      src="/man.png" // ✅ public folder image
+                      src="/man.png"
                       alt="User avatar"
                       width={40}
                       height={40}
