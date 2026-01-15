@@ -13,79 +13,33 @@ import {
   Users,
   Home,
 } from "lucide-react";
+import useAuthState from "@/hooks/useAuthState";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const { user: authUser, loading } = useAuthState();
 
-  // Mock user data
+  // Fallback user data if not logged in
   const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    phone: "+1 (555) 123-4567",
+    name: authUser?.displayName || "Guest User",
+    email: authUser?.email || "john@example.com",
+    phone: authUser?.phoneNumber || "+1 (555) 123-456",
     address: "123 Green Street, Fresh City, FC 12345",
     memberSince: "January 2024",
     totalOrders: 24,
     totalSpent: "$1,245.50",
   };
 
-  // Mock order data
-  const orders = [
-    {
-      id: "#ORD-001",
-      date: "Jan 10, 2024",
-      items: "Fresh Vegetables, Organic Fruits",
-      total: "$45.99",
-      status: "Delivered",
-      statusColor: "bg-green-100 text-green-800",
-    },
-    {
-      id: "#ORD-002",
-      date: "Jan 8, 2024",
-      items: "Dairy Products",
-      total: "$32.50",
-      status: "Delivered",
-      statusColor: "bg-green-100 text-green-800",
-    },
-    {
-      id: "#ORD-003",
-      date: "Jan 5, 2024",
-      items: "Fresh Meat, Vegetables",
-      total: "$67.25",
-      status: "In Transit",
-      statusColor: "bg-blue-100 text-blue-800",
-    },
-  ];
-
-  const stats = [
-    {
-      label: "Total Orders",
-      value: "24",
-      icon: ShoppingBag,
-      color: "bg-green-100",
-      textColor: "text-green-600",
-    },
-    {
-      label: "Saved Items",
-      value: "12",
-      icon: Heart,
-      color: "bg-red-100",
-      textColor: "text-red-600",
-    },
-    {
-      label: "Active Addresses",
-      value: "3",
-      icon: MapPin,
-      color: "bg-blue-100",
-      textColor: "text-blue-600",
-    },
-    {
-      label: "Total Savings",
-      value: "$245.50",
-      icon: TrendingUp,
-      color: "bg-purple-100",
-      textColor: "text-purple-600",
-    },
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -122,7 +76,36 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => {
+          {[
+            {
+              label: "Total Orders",
+              value: "24",
+              icon: ShoppingBag,
+              color: "bg-green-100",
+              textColor: "text-green-600",
+            },
+            {
+              label: "Saved Items",
+              value: "12",
+              icon: Heart,
+              color: "bg-red-100",
+              textColor: "text-red-600",
+            },
+            {
+              label: "Active Addresses",
+              value: "3",
+              icon: MapPin,
+              color: "bg-blue-100",
+              textColor: "text-blue-600",
+            },
+            {
+              label: "Total Savings",
+              value: "$245.50",
+              icon: TrendingUp,
+              color: "bg-purple-100",
+              textColor: "text-purple-600",
+            },
+          ].map((stat, index) => {
             const Icon = stat.icon;
             return (
               <div
@@ -171,7 +154,32 @@ export default function Dashboard() {
                 Recent Orders
               </h2>
               <div className="space-y-4">
-                {orders.map((order, index) => (
+                {[
+                  {
+                    id: "#ORD-001",
+                    date: "Jan 10, 2024",
+                    items: "Fresh Vegetables, Organic Fruits",
+                    total: "$45.99",
+                    status: "Delivered",
+                    statusColor: "bg-green-100 text-green-800",
+                  },
+                  {
+                    id: "#ORD-002",
+                    date: "Jan 8, 2024",
+                    items: "Dairy Products",
+                    total: "$32.50",
+                    status: "Delivered",
+                    statusColor: "bg-green-100 text-green-800",
+                  },
+                  {
+                    id: "#ORD-003",
+                    date: "Jan 5, 2024",
+                    items: "Fresh Meat, Vegetables",
+                    total: "$67.25",
+                    status: "In Transit",
+                    statusColor: "bg-blue-100 text-blue-800",
+                  },
+                ].map((order, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
@@ -247,7 +255,32 @@ export default function Dashboard() {
               Order History
             </h2>
             <div className="space-y-4">
-              {orders.map((order, index) => (
+              {[
+                {
+                  id: "#ORD-001",
+                  date: "Jan 10, 2024",
+                  items: "Fresh Vegetables, Organic Fruits",
+                  total: "$45.99",
+                  status: "Delivered",
+                  statusColor: "bg-green-100 text-green-800",
+                },
+                {
+                  id: "#ORD-002",
+                  date: "Jan 8, 2024",
+                  items: "Dairy Products",
+                  total: "$32.50",
+                  status: "Delivered",
+                  statusColor: "bg-green-100 text-green-800",
+                },
+                {
+                  id: "#ORD-003",
+                  date: "Jan 5, 2024",
+                  items: "Fresh Meat, Vegetables",
+                  total: "$67.25",
+                  status: "In Transit",
+                  statusColor: "bg-blue-100 text-blue-800",
+                },
+              ].map((order, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
