@@ -8,7 +8,6 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { logout } from "@/lib/auth";
 import { useCart } from "./context/CartProvider";
-import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -16,18 +15,8 @@ export default function Navbar() {
   const { getTotalItems } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const totalItems = getTotalItems();
-  const router = useRouter();
 
-  // console.log(user);
-
-  function handleClick(e) {
-    e.preventDefault();
-    if (user) {
-      router.push("/cart"); // ✅ logged in হলে cart এ যাবে
-    } else {
-      router.push("/login"); // ✅ না থাকলে login এ যাবে
-    }
-  }
+  console.log(user);
 
   return (
     <nav className="bg-white border-b border-green-100 top-0 z-50">
@@ -67,13 +56,22 @@ export default function Navbar() {
             >
               Contact
             </Link>
+
             {user ? (
-              <Link
-                href="/dashboard"
-                className="text-gray-600 hover:text-green-600 transition"
-              >
-                Dashboard
-              </Link>
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-gray-600 hover:text-green-600 transition"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/feedback"
+                  className="text-gray-600 hover:text-green-600 transition"
+                >
+                  Feedback
+                </Link>
+              </>
             ) : (
               ""
             )}
@@ -81,7 +79,7 @@ export default function Navbar() {
 
           {/* Right Section */}
           <div className="hidden md:flex items-center gap-4">
-            {/* <Link
+            <Link
               href="/cart"
               className="relative p-2 text-gray-600 hover:text-green-600"
             >
@@ -91,19 +89,7 @@ export default function Navbar() {
                   {totalItems}
                 </span>
               )}
-            </Link> */}
-            <button
-              onClick={handleClick}
-              className="relative p-2 text-gray-600 hover:text-green-600"
-            >
-              <ShoppingCart size={24} />
-              {totalItems > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {totalItems}
-                </span>
-              )}
-            </button>
-
+            </Link>
             <div className="relative">
               {user ? (
                 <>
@@ -147,26 +133,14 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
-            {/* <Link href="/cart" className="relative p-2 text-gray-600">
+            <Link href="/cart" className="relative p-2 text-gray-600">
               <ShoppingCart size={24} />
               {totalItems > 0 && (
                 <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
-            </Link> */}
-            <button
-              onClick={handleClick}
-              className="relative p-2 text-gray-600 hover:text-green-600"
-            >
-              <ShoppingCart size={24} />
-              {totalItems > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {totalItems}
-                </span>
-              )}
-            </button>
-
+            </Link>
             <button
               className="p-2 text-gray-600"
               onClick={() => setIsOpen(!isOpen)}
@@ -203,13 +177,23 @@ export default function Navbar() {
             >
               Contact
             </Link>
+
             {user ? (
-              <Link
-                href="/dashboard"
-                className="text-gray-600 hover:text-green-600 transition"
-              >
-                Dashboard
-              </Link>
+              <div className=" flex flex-col gap-1">
+                <Link
+                  href="/dashboard"
+                  className="text-gray-600 hover:text-green-600 transition"
+                >
+                  Dashboard
+                </Link>
+
+                <Link
+                  href="/feedback"
+                  className="block py-2 text-gray-600 hover:text-green-600"
+                >
+                  Feedback
+                </Link>
+              </div>
             ) : (
               ""
             )}
