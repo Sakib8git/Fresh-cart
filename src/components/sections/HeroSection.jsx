@@ -34,10 +34,10 @@ export default function HeroSection() {
             </div>
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-8 flex items-center justify-center h-80">
-            <div className="w-full h-full bg-gradient-to-br from-green-200 to-emerald-300 rounded-lg flex items-center justify-center">
+            <div className="w-full h-full bg-liner-to-br from-green-200 to-emerald-300 rounded-lg flex items-center justify-center">
               <span className="text-6xl">
                 <Image
-                  className="h-70 lg:w-145 rounded-3xl hover:scale-105 hover:rotate-2 transition-transform duration-500 ease-in-out"
+                  className="h-70 hover:shadow-md shadow-green-100 md:w-full lg:w-145 rounded-3xl hover:scale-105 hover:rotate-2 transition-transform duration-500 ease-in-out"
                   width={500}
                   height={500}
                   src="https://i.ibb.co.com/dwDyY0Sp/andrew-benjack-4ug-H7-Ti-Gj-A-unsplash.jpg"

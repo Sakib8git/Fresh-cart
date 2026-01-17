@@ -22,9 +22,9 @@ export default function FeaturedProducts() {
           {featuredProducts.map((product) => (
             <Link key={product.id} href={`/items/${product.id}`}>
               <div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition cursor-pointer h-full">
-                <div className="bg-gradient-to-b from-green-100 to-emerald-100 p-6 flex items-center justify-center h-40">
+                <div className="bg-liner-to-b from-green-100 to-emerald-100 p-6 flex items-center justify-center h-40">
                   <Image
-                    src={product.image} // ✅ এখানে URL আসবে
+                    src={product.image} 
                     alt={product.name}
                     width={160}
                     height={160}

@@ -29,20 +29,39 @@ export default function FeedbackForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Feedback submitted:", formData);
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({
-        name: "",
-        email: "",
-        category: "general",
-        rating: 0,
-        message: "",
+
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-      setSubmitted(false);
-    }, 3000);
+
+      if (res.ok) {
+        console.log("Feedback submitted:", formData);
+        setSubmitted(true);
+
+        setTimeout(() => {
+          setFormData({
+            name: "",
+            email: "",
+            category: "general",
+            rating: 0,
+            message: "",
+          });
+          setSubmitted(false);
+        }, 3000);
+      } else {
+        const errorData = await res.json();
+        console.error("Error submitting feedback:", errorData);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
   };
 
   return (
