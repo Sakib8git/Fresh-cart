@@ -40,7 +40,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="bg-white rounded-lg lg:w-175 shadow-md p-8">
+    <div className="bg-white rounded-lg md-w-140 lg:w-150 shadow-md  p-8">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">
         Send us a Message
       </h2>
