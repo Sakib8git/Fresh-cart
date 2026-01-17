@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -24,8 +25,8 @@ export default function ContactForm() {
     e.preventDefault();
     setIsLoading(true);
     setTimeout(() => {
-      alert(
-        `Thank you ${formData.fullName}! We've received your message and will get back to you soon.`
+      toast.success(
+        `Thank you ${formData.fullName}! We've received your message and will get back to you soon.`,
       );
       setIsLoading(false);
       setFormData({
@@ -39,7 +40,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-8">
+    <div className="bg-white rounded-lg lg:w-175 shadow-md p-8">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">
         Send us a Message
       </h2>
@@ -127,6 +128,7 @@ export default function ContactForm() {
           {isLoading ? "Sending..." : "Send Message"}
         </button>
       </form>
+      <ToastContainer />
     </div>
   );
 }

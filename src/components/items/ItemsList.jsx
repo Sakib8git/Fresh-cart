@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Filter, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,6 +19,14 @@ export default function ItemsList() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("popular");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000); // 1s demo loader
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredProducts =
     selectedCategory === "all"
@@ -31,6 +39,21 @@ export default function ItemsList() {
     if (sortBy === "rating") return b.rating - a.rating;
     return 0;
   });
+
+  // ✅ Loading spinner
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Image
+          src="/vegetable.png"
+          alt="Loading..."
+          width={120}
+          height={120}
+          className="animate-spin"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-6">

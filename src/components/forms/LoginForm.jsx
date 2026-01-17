@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2"; // ✅ SweetAlert2 import
 import { useRouter } from "next/navigation";
 import { signInWithEmail, signInWithGoogle } from "@/lib/auth";
 import Link from "next/link";
@@ -19,11 +19,21 @@ export default function LoginForm() {
     setIsLoading(true);
     try {
       await signInWithEmail(email, password);
-      toast.success(`Login successful! Welcome back, ${email}`);
+      Swal.fire({
+        icon: "success",
+        title: "Login successful!",
+        text: `Welcome back, ${email}`,
+        confirmButtonColor: "#16a34a", // green-600
+      });
       router.push("/items");
     } catch (err) {
       console.error(err);
-      toast.error("Login failed");
+      Swal.fire({
+        icon: "error",
+        title: "Login failed",
+        text: "Please check your credentials and try again.",
+        confirmButtonColor: "#dc2626", // red-600
+      });
     } finally {
       setIsLoading(false);
     }
@@ -32,10 +42,19 @@ export default function LoginForm() {
   async function handleGoogleLogin() {
     try {
       await signInWithGoogle();
-      toast.success("Logged in with Google!");
+      Swal.fire({
+        icon: "success",
+        title: "Logged in with Google!",
+        confirmButtonColor: "#16a34a",
+      });
       router.push("/items");
     } catch (err) {
-      toast.error("Google login failed");
+      Swal.fire({
+        icon: "error",
+        title: "Google login failed",
+        text: "Something went wrong. Please try again.",
+        confirmButtonColor: "#dc2626",
+      });
     }
   }
 

@@ -4,17 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-// import { signOut } from "firebase/auth";
+
 import { signInWithGoogle, signUpWithEmail } from "@/lib/auth";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
 export default function SignupForm() {
   const router = useRouter();
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [name, setName] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -37,11 +36,19 @@ export default function SignupForm() {
   async function handleSignup(e) {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match!");
+      Swal.fire({
+        icon: "error",
+        title: "Passwords do not match!",
+        confirmButtonColor: "#dc2626",
+      });
       return;
     }
     if (!formData.agreeToTerms) {
-      toast.error("Please agree to the terms and conditions");
+      Swal.fire({
+        icon: "warning",
+        title: "Please agree to the terms and conditions",
+        confirmButtonColor: "#f59e0b",
+      });
       return;
     }
     setIsLoading(true);
@@ -49,16 +56,24 @@ export default function SignupForm() {
       await signUpWithEmail(
         formData.email,
         formData.password,
-        formData.fullName
+        formData.fullName,
       );
-      toast.success(
-        `Account created successfully! Welcome, ${formData.fullName}`
-      );
+      Swal.fire({
+        icon: "success",
+        title: "Account created successfully!",
+        text: `Welcome, ${formData.fullName}`,
+        confirmButtonColor: "#16a34a",
+      });
       await signOut(auth); // logout immediately
       router.push("/login"); // send to login page
     } catch (err) {
       console.error(err);
-      toast.error("Signup failed");
+      Swal.fire({
+        icon: "error",
+        title: "Signup failed",
+        text: "Something went wrong. Please try again.",
+        confirmButtonColor: "#dc2626",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -288,7 +303,6 @@ export default function SignupForm() {
           </div>
         </div>
       </div>
-      
     </main>
   );
 }

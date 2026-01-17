@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function Testimonials() {
   const [feedbacks, setFeedbacks] = useState([]);
+  const [loading, setLoading] = useState(true); // ✅ loading state
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -11,10 +13,12 @@ export default function Testimonials() {
         const res = await fetch("/api/feedback");
         if (!res.ok) throw new Error("Failed to fetch feedbacks");
         const data = await res.json();
-        setFeedbacks(data);
-        // console.log(data);
+        const sorted = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setFeedbacks(sorted);
       } catch (err) {
         console.error("Error fetching feedbacks:", err);
+      } finally {
+        setLoading(false); // ✅ stop loader
       }
     };
     fetchFeedbacks();
@@ -32,40 +36,46 @@ export default function Testimonials() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {feedbacks.slice(0, 3).map((fb, index) => (
-            <div
-              key={index}
-              className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition"
-            >
-              <p className="text-gray-600 mb-4">
-                {fb.messages || fb.message || ""}
-              </p>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={16}
-                    className={
-                      i < Math.floor(fb.rating || 5)
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "text-gray-300"
-                    }
-                  />
-                ))}
-              </div>
-
-              <div>
-                <p className="font-semibold text-gray-900">
-                  {fb.name || "Anonymous"}
+        {loading ? (
+          // ✅ Lottie loader
+          <div className="flex justify-center items-center py-12">
+            <h1 className="font-bold text-8xl text-center animate-spin">🥕</h1>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {feedbacks.slice(0, 3).map((fb, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition"
+              >
+                <p className="text-gray-600 mb-4">
+                  {fb.messages || fb.message || ""}
                 </p>
-                <p className="text-sm text-gray-500">
-                  {fb.category || "Customer"}
-                </p>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      className={
+                        i < Math.floor(fb.rating || 5)
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                      }
+                    />
+                  ))}
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">
+                    {fb.name || "Anonymous"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {fb.category || "Customer"}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

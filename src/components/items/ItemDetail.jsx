@@ -16,13 +16,15 @@ export default function ItemDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (params?.id) {
       const foundProduct = allProducts.find(
-        (p) => p.id === Number.parseInt(params.id)
+        (p) => p.id === Number.parseInt(params.id),
       );
       setProduct(foundProduct || null);
+      setLoading(false);
     }
   }, [params]);
 
@@ -34,6 +36,15 @@ export default function ItemDetailPage() {
       setTimeout(() => setAddedToCart(false), 2000);
     }
   };
+  if (loading) {
+    return (
+      <main className="min-h-screen flex flex-col bg-gray-50">
+        <div className="flex-1 flex justify-center items-center py-12">
+          <h1 className="font-bold text-8xl text-center animate-spin">🥕</h1>
+        </div>
+      </main>
+    );
+  }
 
   if (!product) {
     return (
