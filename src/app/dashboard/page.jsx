@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ShoppingBag,
@@ -17,19 +17,63 @@ import useAuthState from "@/hooks/useAuthState";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("orders");
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editedUser, setEditedUser] = useState(null);
+  const [user, setUser] = useState(null);
   const { user: authUser, loading } = useAuthState();
 
-  // Fallback user data if not logged in
-  const user = {
-    name: authUser?.displayName || "Guest User",
-    email: authUser?.email || "john@example.com",
-    phone: authUser?.phoneNumber || "+1 (555) 123-456",
-    address: "123 Green Street, Fresh City, FC 12345",
-    memberSince: "January 2024",
-    totalOrders: 24,
-    totalSpent: "$1,245.50",
+  // Load user data from localStorage or create default
+  useEffect(() => {
+    const savedUser = localStorage.getItem("userProfile");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    } else {
+      const defaultUser = {
+        name: authUser?.displayName || "Guest User",
+        email: authUser?.email || "john@example.com",
+        phone: authUser?.phoneNumber || "+1 (555) 123-4567",
+        address: "123 Green Street, Fresh City, FC 12345",
+        memberSince: "January 2024",
+        totalOrders: 24,
+        totalSpent: "$1,245.50",
+      };
+      setUser(defaultUser);
+      localStorage.setItem("userProfile", JSON.stringify(defaultUser));
+    }
+  }, [authUser]);
+
+  // Initialize edited user data when entering edit mode
+  const handleEditClick = () => {
+    setEditedUser({ ...user });
+    setIsEditingProfile(true);
+  };
+  // Handle input changes in edit mode
+  const handleInputChange = (field, value) => {
+    setEditedUser((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+  // Save profile changes
+  const handleSaveProfile = () => {
+    const updatedUser = {
+      ...user,
+      name: editedUser.name,
+      phone: editedUser.phone,
+      address: editedUser.address,
+      // email is NOT updated - keeping it as is
+    };
+    setUser(updatedUser);
+    localStorage.setItem("userProfile", JSON.stringify(updatedUser));
+    setIsEditingProfile(false);
+    console.log("[v0] Profile saved:", updatedUser);
   };
 
+  // Cancel edit mode
+  const handleCancelEdit = () => {
+    setEditedUser(null);
+    setIsEditingProfile(false);
+  };
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -91,8 +135,6 @@ export default function Dashboard() {
               color: "bg-red-100",
               textColor: "text-red-600",
             },
-            
-            
           ].map((stat, index) => {
             const Icon = stat.icon;
             return (
@@ -118,7 +160,7 @@ export default function Dashboard() {
 
         {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-gray-200 overflow-x-auto">
-          {[ "orders", "profile"].map((tab) => (
+          {["orders", "profile"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -134,7 +176,6 @@ export default function Dashboard() {
         </div>
 
         {/* Tab Content */}
-        
 
         {activeTab === "orders" && (
           <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -191,7 +232,7 @@ export default function Dashboard() {
         )}
 
         {activeTab === "profile" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="">
             {/* Profile Info */}
             <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-6">
@@ -204,9 +245,16 @@ export default function Dashboard() {
                   </label>
                   <input
                     type="text"
-                    value={user.name}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
-                    readOnly
+                    value={
+                      isEditingProfile ? editedUser?.name || "" : user.name
+                    }
+                    onChange={(e) => handleInputChange("name", e.target.value)}
+                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 ${
+                      isEditingProfile
+                        ? "bg-white cursor-text"
+                        : "bg-gray-50 cursor-default"
+                    }`}
+                    readOnly={!isEditingProfile}
                   />
                 </div>
                 <div>
@@ -215,9 +263,16 @@ export default function Dashboard() {
                   </label>
                   <input
                     type="email"
-                    value={user.email}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
-                    readOnly
+                    value={
+                      isEditingProfile ? editedUser?.email || "" : user.email
+                    }
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 ${
+                      isEditingProfile
+                        ? "bg-white cursor-text"
+                        : "bg-gray-50 cursor-default"
+                    }`}
+                    readOnly={!isEditingProfile}
                   />
                 </div>
                 <div>
@@ -226,9 +281,16 @@ export default function Dashboard() {
                   </label>
                   <input
                     type="tel"
-                    value={user.phone}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
-                    readOnly
+                    value={
+                      isEditingProfile ? editedUser?.phone || "" : user.phone
+                    }
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 ${
+                      isEditingProfile
+                        ? "bg-white cursor-text"
+                        : "bg-gray-50 cursor-default"
+                    }`}
+                    readOnly={!isEditingProfile}
                   />
                 </div>
                 <div>
@@ -237,48 +299,48 @@ export default function Dashboard() {
                   </label>
                   <input
                     type="text"
-                    value={user.address}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
-                    readOnly
+                    value={
+                      isEditingProfile
+                        ? editedUser?.address || ""
+                        : user.address
+                    }
+                    onChange={(e) =>
+                      handleInputChange("address", e.target.value)
+                    }
+                    className={`w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 ${
+                      isEditingProfile
+                        ? "bg-white cursor-text"
+                        : "bg-gray-50 cursor-default"
+                    }`}
+                    readOnly={!isEditingProfile}
                   />
                 </div>
               </div>
-              <button className="mt-6 px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition">
-                Edit Profile
-              </button>
-            </div>
-
-            {/* Settings */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Settings size={20} />
-                Settings
-              </h2>
-              <div className="space-y-3">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="w-4 h-4 text-green-600"
-                  />
-                  <span className="text-gray-700">Email Notifications</span>
-                </label>
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="w-4 h-4 text-green-600"
-                  />
-                  <span className="text-gray-700">SMS Alerts</span>
-                </label>
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 text-green-600" />
-                  <span className="text-gray-700">Marketing Emails</span>
-                </label>
+              <div className="mt-6 flex gap-3">
+                {!isEditingProfile ? (
+                  <button
+                    onClick={handleEditClick}
+                    className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition"
+                  >
+                    Edit Profile
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleSaveProfile}
+                      className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition"
+                    >
+                      Save Changes
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg font-medium transition"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
               </div>
-              <button className="mt-6 w-full px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 font-medium transition">
-                Change Password
-              </button>
             </div>
           </div>
         )}
