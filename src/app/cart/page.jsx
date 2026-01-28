@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
 import { Trash2, ArrowLeft, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import Swal from "sweetalert2";
 import { useCart } from "@/components/context/CartProvider";
+import { useOrders } from "@/components/context/OrderContext";
 
 export default function CartPage() {
   const {
@@ -16,9 +19,44 @@ export default function CartPage() {
     clearCart,
     getTotalPrice,
   } = useCart();
+  const { addOrder } = useOrders();
+  const router = useRouter();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const total = getTotalPrice();
+
+  const handleProceedToCheckout = async () => {
+    // Show sweetalert confirmation
+    const result = await Swal.fire({
+      title: "Complete Your Order?",
+      text: `You are about to place an order for $${total.toFixed(2)}. Do you want to proceed?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#16a34a",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Complete Order",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      // Create order
+      addOrder(cartItems, total);
+
+      // Clear the cart
+      clearCart();
+
+      // Show success message
+      await Swal.fire({
+        title: "Order Placed!",
+        text: "Your order has been successfully placed. Redirecting to dashboard...",
+        icon: "success",
+        confirmButtonColor: "#16a34a",
+      });
+
+      // Redirect to dashboard
+      router.push("/dashboard");
+    }
+  };
 
   if (cartItems.length === 0) {
     return (
@@ -146,27 +184,30 @@ export default function CartPage() {
 
               <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
                 <div className="flex justify-between text-gray-600">
-                  <span>Price of Product</span>
+                  <span>Subtotal</span>
                   <span>${total.toFixed(2)}</span>
                 </div>
-                {/* <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
                   <span>$5.00</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Tax</span>
                   <span>${(total * 0.1).toFixed(2)}</span>
-                </div> */}
+                </div>
               </div>
 
               <div className="flex justify-between items-center mb-6">
                 <span className="text-lg font-bold text-gray-900">Total</span>
                 <span className="text-2xl font-bold text-green-600">
-                  ${total.toFixed(2)}
+                  ${(total + 5 + total * 0.1).toFixed(2)}
                 </span>
               </div>
 
-              <button className="w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition mb-3">
+              <button
+                onClick={handleProceedToCheckout}
+                className="w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition mb-3"
+              >
                 Proceed to Checkout
               </button>
 

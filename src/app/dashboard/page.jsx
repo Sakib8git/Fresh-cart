@@ -14,13 +14,16 @@ import {
   Home,
 } from "lucide-react";
 import useAuthState from "@/hooks/useAuthState";
+import { useOrders } from "@/components/context/OrderContext";
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState("orders");
+  const [activeTab, setActiveTab] = useState("overview");
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
   const [user, setUser] = useState(null);
   const { user: authUser, loading } = useAuthState();
+  const { getRecentOrders } = useOrders();
+  // console.log(getRecentOrders().length);
 
   // Load user data from localStorage or create default
   useEffect(() => {
@@ -123,7 +126,7 @@ export default function Dashboard() {
           {[
             {
               label: "Total Orders",
-              value: "24",
+              value: getRecentOrders().length,
               icon: ShoppingBag,
               color: "bg-green-100",
               textColor: "text-green-600",
@@ -177,56 +180,42 @@ export default function Dashboard() {
 
         {/* Tab Content */}
 
-        {activeTab === "orders" && (
+        {activeTab === "overview" && (
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Order History
+              Recent Orders
             </h2>
             <div className="space-y-4">
-              {[
-                {
-                  id: "#ORD-001",
-                  date: "Jan 10, 2024",
-                  items: "Fresh Vegetables, Organic Fruits",
-                  total: "$45.99",
-                  status: "Delivered",
-                  statusColor: "bg-green-100 text-green-800",
-                },
-                {
-                  id: "#ORD-002",
-                  date: "Jan 8, 2024",
-                  items: "Dairy Products",
-                  total: "$32.50",
-                  status: "Delivered",
-                  statusColor: "bg-green-100 text-green-800",
-                },
-                {
-                  id: "#ORD-003",
-                  date: "Jan 5, 2024",
-                  items: "Fresh Meat, Vegetables",
-                  total: "$67.25",
-                  status: "In Transit",
-                  statusColor: "bg-blue-100 text-blue-800",
-                },
-              ].map((order, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <div>
-                    <p className="font-semibold text-gray-900">{order.id}</p>
-                    <p className="text-sm text-gray-600">{order.date}</p>
+              {getRecentOrders().length === 0 ? (
+                <p className="text-gray-600 text-center py-8">
+                  No orders yet. Start shopping to create your first order!
+                </p>
+              ) : (
+                getRecentOrders().map((order, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <div>
+                      <p className="font-semibold text-gray-900">{order.id}</p>
+                      <p className="text-sm text-gray-600">{order.date}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {order.items}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-gray-900">
+                        {order.total}
+                      </p>
+                      <span
+                        className={`text-xs font-medium px-2 py-1 rounded ${order.statusColor}`}
+                      >
+                        {order.status}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-gray-900">{order.total}</p>
-                    <span
-                      className={`text-xs font-medium px-2 py-1 rounded ${order.statusColor}`}
-                    >
-                      {order.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         )}
