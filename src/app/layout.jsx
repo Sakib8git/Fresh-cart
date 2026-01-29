@@ -1,5 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
-// import { Analytics } from "@vercel/analytics/next"
+
 import "./globals.css";
 import { CartProvider } from "@/components/context/CartProvider";
 import { OrderProvider } from "@/components/context/OrderContext";
