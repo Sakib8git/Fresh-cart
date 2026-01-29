@@ -1,10 +1,10 @@
-# Fresh Cart Live Link
-
-[Fresh-Cart](https://freshcart-sigma-hazel.vercel.app/)
-
 # FreshCart E-Commerce App
 
 A modern, full-featured grocery e-commerce platform built with Next.js and React. This application allows users to browse fresh produce, add items to cart, and manage their shopping experience seamlessly.
+![Home Page](modified_image.png)
+# Fresh Cart Live Link
+
+[Fresh-Cart](https://freshcart-sigma-hazel.vercel.app/)
 
 ## Project Description
 
