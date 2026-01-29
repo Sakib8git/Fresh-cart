@@ -1,3 +1,7 @@
+# Fresh Cart Live Link
+
+[Fresh-Cart](https://freshcart-sigma-hazel.vercel.app/)
+
 # FreshCart E-Commerce App
 
 A modern, full-featured grocery e-commerce platform built with Next.js and React. This application allows users to browse fresh produce, add items to cart, and manage their shopping experience seamlessly.
@@ -44,7 +48,6 @@ FreshCart E-Commerce App is a Next.js-powered web application designed for selli
    ```
 
 3. **Configure Firebase Authorized Domains**
-
    - Go to Firebase Console → Authentication → Settings → Authorized domains
    - Add `localhost:3000` for local development
    - Add your production domain when deployed
